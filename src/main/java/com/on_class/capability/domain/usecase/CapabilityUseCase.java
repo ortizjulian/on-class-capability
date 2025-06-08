@@ -24,8 +24,8 @@ public class CapabilityUseCase implements ICapabilityServicePort {
 
     @Override
     public Mono<Void> createCapability(Capability capability) {
-        return validateTechnologies(capability.getTechnologies())
-                .then(capabilityPersistencePort.findByName(capability.getName()))
+        return validateTechnologies(capability)
+                .flatMap(validatedCapability -> capabilityPersistencePort.findByName(validatedCapability.getName()))
                 .flatMap(existing -> Mono.error(new BusinessException(TechnicalMessage.ALREADY_EXISTS)))
                 .switchIfEmpty(
                         Mono.defer(() ->
@@ -46,9 +46,11 @@ public class CapabilityUseCase implements ICapabilityServicePort {
                 .then(Mono.error(ex));
     }
 
-    private Mono<Void> validateTechnologies(List<Technology> technologies) {
+    private Mono<Capability> validateTechnologies(Capability capability) {
+
+        List<Technology> technologies = capability.getTechnologies();
         if (technologies.size() < DomainConstants.MIN_TECHNOLOGIES || technologies.size() > DomainConstants.MAX_TECHNOLOGIES) {
-            throw new BusinessException(TechnicalMessage.INVALID_REQUEST,List.of(DomainConstants.EXCEPTION_TECHNOLOGY_INVALID_QUANTITY));
+            return Mono.error(new BusinessException(TechnicalMessage.INVALID_REQUEST,List.of(DomainConstants.EXCEPTION_TECHNOLOGY_INVALID_QUANTITY)));
         }
 
         long uniqueIdsCount = technologies.stream()
@@ -57,8 +59,8 @@ public class CapabilityUseCase implements ICapabilityServicePort {
                 .count();
 
         if (uniqueIdsCount != technologies.size()) {
-            throw new BusinessException(TechnicalMessage.INVALID_REQUEST,List.of(DomainConstants.EXCEPTION_TECHNOLOGY_DUPLICATED_ID));
+            return Mono.error(new BusinessException(TechnicalMessage.INVALID_REQUEST,List.of(DomainConstants.EXCEPTION_TECHNOLOGY_DUPLICATED_ID)));
         }
-        return Mono.empty();
+        return Mono.just(capability);
     }
 }
