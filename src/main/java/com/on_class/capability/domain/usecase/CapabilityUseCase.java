@@ -58,6 +58,10 @@ public class CapabilityUseCase implements ICapabilityServicePort {
                 .map(Capability::getId)
                 .toList();
 
+        if (capabilityIds.isEmpty()) {
+            return Mono.just(paginatedCapabilities);
+        }
+
         return technologyExternalPort.getTecnologiesByCapabilities(capabilityIds)
                 .collectList()
                 .map(techCapabilities -> buildNewPaginationResponse(paginatedCapabilities, techCapabilities));

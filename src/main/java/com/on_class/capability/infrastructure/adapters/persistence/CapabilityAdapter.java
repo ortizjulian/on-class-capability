@@ -63,4 +63,10 @@ public class CapabilityAdapter implements ICapabilityPersistencePort {
                 });
 
     }
+
+    @Override
+    public Mono<Boolean> existAllByIds(List<Long> ids) {
+        return capabilityRepository.countByIdIn(ids)
+                .map(count -> count == ids.size());
+    }
 }

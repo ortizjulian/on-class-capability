@@ -1,5 +1,6 @@
 package com.on_class.capability.infrastructure.entrypoints.documentation;
 
+import com.on_class.capability.domain.model.PaginationResponse;
 import com.on_class.capability.infrastructure.entrypoints.dto.CapabilityRequestDto;
 import com.on_class.capability.infrastructure.utils.Constants;
 import io.swagger.v3.oas.annotations.Operation;
@@ -74,7 +75,14 @@ import java.lang.annotation.Target;
                                 @Parameter(name = Constants.QUERY_PARAM_SORT_FIELD, description = "Field to sort by", in = ParameterIn.QUERY, required = true)
                         },
                         responses = {
-                                @ApiResponse(responseCode = "200", description = "Capabilities retrieved successfully"),
+                                @ApiResponse(
+                                        responseCode = "200",
+                                        description = "Capabilities retrieved successfully",
+                                        content = @Content(
+                                                mediaType = "application/json",
+                                                schema = @Schema(implementation = PaginationResponse.class)
+                                        )
+                                ),
                                 @ApiResponse(responseCode = "400", description = "Invalid query parameters"),
                                 @ApiResponse(responseCode = "500", description = "Unexpected server error")
                         }
