@@ -164,9 +164,6 @@ class CapabilityUseCaseTest {
         when(capabilityPersistencePort.getCapabilities(validPagination))
             .thenReturn(Mono.just(emptyResponse));
 
-        when(technologyExternalPort.getTecnologiesByCapabilities(List.of()))
-            .thenReturn(Flux.empty());
-
         StepVerifier.create(capabilityUseCase.getCapabilities(validPagination))
             .expectNextMatches(response -> 
                 response.getTotalElements() == 0L &&
@@ -174,6 +171,6 @@ class CapabilityUseCaseTest {
             .verifyComplete();
 
         verify(capabilityPersistencePort).getCapabilities(validPagination);
-        verify(technologyExternalPort).getTecnologiesByCapabilities(List.of());
+        verifyNoInteractions(technologyExternalPort);
     }
 }
