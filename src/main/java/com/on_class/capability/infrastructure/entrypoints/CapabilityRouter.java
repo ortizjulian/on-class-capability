@@ -13,7 +13,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 import static org.springframework.web.reactive.function.server.RouterFunctions.nest;
 
 @Configuration
-public class RouterRest {
+public class CapabilityRouter {
     @Bean
     @CapabilityApiInfo
     public RouterFunction<ServerResponse> routerFunction(CapabilityHandler capabilityHandler) {
