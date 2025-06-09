@@ -4,10 +4,12 @@ public class Technology {
     private Long id;
     private String name;
 
+    public Technology() {
+    }
+
     public Technology(Long id) {
         this.id = id;
     }
-
 
     public Technology(Long id, String name) {
         this.id = id;

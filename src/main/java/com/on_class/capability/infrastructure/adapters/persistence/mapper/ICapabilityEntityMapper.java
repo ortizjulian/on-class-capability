@@ -5,10 +5,21 @@ import com.on_class.capability.infrastructure.adapters.persistence.entity.Capabi
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface ICapabilityEntityMapper {
-    CapabilityEntity toCapabilityEntity(Capability capability);
+    default CapabilityEntity toCapabilityEntity(Capability capability) {
+        return CapabilityEntity.builder()
+                .name(capability.getName())
+                .description(capability.getDescription())
+                .technologyQuantity(capability.getTechnologies().size())
+                .build();
+
+    }
     Capability toCapability(CapabilityEntity capabilityEntity);
+
+    List<Capability> toCapabilities(List<CapabilityEntity> capabilityEntityList);
 }

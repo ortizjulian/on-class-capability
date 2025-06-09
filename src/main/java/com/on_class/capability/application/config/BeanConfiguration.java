@@ -5,6 +5,7 @@ import com.on_class.capability.domain.spi.ICapabilityPersistencePort;
 import com.on_class.capability.domain.spi.ITechnologyExternalPort;
 import com.on_class.capability.domain.usecase.CapabilityUseCase;
 import com.on_class.capability.infrastructure.adapters.webclient.TechnologyAdapter;
+import com.on_class.capability.infrastructure.adapters.webclient.mapper.ICapabilityResponseMapper;
 import com.on_class.capability.infrastructure.adapters.webclient.mapper.ICapabilityTechnologiesMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ public class BeanConfiguration {
 
     private final ICapabilityPersistencePort capabilityPersistencePort;
     private final ICapabilityTechnologiesMapper capabilityTechnologiesMapper;
+    private final ICapabilityResponseMapper capabilityResponseMapper;
     private final TechnologyProperties technologyProperties;
 
     @Bean
@@ -26,7 +28,7 @@ public class BeanConfiguration {
 
     @Bean
     public ITechnologyExternalPort technologyExternalPort(WebClient webClient) {
-        return new TechnologyAdapter(webClient, capabilityTechnologiesMapper);
+        return new TechnologyAdapter(webClient, capabilityTechnologiesMapper,capabilityResponseMapper);
     }
 
     @Bean
