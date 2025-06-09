@@ -23,7 +23,7 @@ public class DomainConstants {
     public static final String MESSAGE_ALREADY_EXISTS = "Already exists, please verify data";
     public static final String MESSAGE_INTERNAL_ERROR = "Something went wrong, please try again";
     public static final String MESSAGE_INTERNAL_ERROR_IN_ADAPTERS = "Something went wrong in adapters, please try again.";
-    public static final String MESSAGE_ADAPTER_RESPONSE_NOT_FOUND = "Invalid email, please verify.";
+    public static final String MESSAGE_ADAPTER_RESPONSE_NOT_FOUND = "Something went wrong in adapters, please try again.";
     public static final String MESSAGE_NOT_ALL_FOUND = "Not all found, please verify data";
     //Pagination
     public static final Integer PAGINATION_MIN_SIZE = 0;
