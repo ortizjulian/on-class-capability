@@ -5,12 +5,16 @@ import com.on_class.capability.domain.constants.DomainConstants;
 import com.on_class.capability.domain.enums.TechnicalMessage;
 import com.on_class.capability.domain.exceptions.BusinessException;
 import com.on_class.capability.domain.model.Capability;
+import com.on_class.capability.domain.model.PaginationAndFilter;
+import com.on_class.capability.domain.model.PaginationResponse;
 import com.on_class.capability.domain.model.Technology;
 import com.on_class.capability.domain.spi.ICapabilityPersistencePort;
 import com.on_class.capability.domain.spi.ITechnologyExternalPort;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CapabilityUseCase implements ICapabilityServicePort {
 
@@ -41,6 +45,51 @@ public class CapabilityUseCase implements ICapabilityServicePort {
                 .then();
     }
 
+    @Override
+    public Mono<PaginationResponse<Capability>> getCapabilities(PaginationAndFilter paginationAndFilter) {
+        return validatePaginationAndFilter(paginationAndFilter)
+                .flatMap(validated -> capabilityPersistencePort.getCapabilities(paginationAndFilter))
+                .flatMap(this::enrichCapabilitiesWithTechnologies);
+    }
+
+    private Mono<PaginationResponse<Capability>> enrichCapabilitiesWithTechnologies(PaginationResponse<Capability> paginatedCapabilities) {
+        List<Long> capabilityIds = paginatedCapabilities.getElements()
+                .stream()
+                .map(Capability::getId)
+                .toList();
+
+        return technologyExternalPort.getTecnologiesByCapabilities(capabilityIds)
+                .collectList()
+                .map(techCapabilities -> buildNewPaginationResponse(paginatedCapabilities, techCapabilities));
+    }
+
+    private PaginationResponse<Capability> buildNewPaginationResponse(PaginationResponse<Capability> paginatedCapabilities,
+                                                                      List<Capability> techCapabilities) {
+        Map<Long, Capability> techCapabilityMap = techCapabilities.stream()
+                .collect(Collectors.toMap(Capability::getId, Function.identity()));
+
+        List<Capability> newCapabilities = paginatedCapabilities.getElements().stream()
+                .map(cap -> {
+                    List<Technology> technologies = techCapabilityMap.get(cap.getId())
+                            .getTechnologies();
+
+                    return new Capability(
+                            cap.getId(),
+                            cap.getName(),
+                            cap.getDescription(),
+                            technologies
+                    );
+                })
+                .toList();
+
+        return new PaginationResponse<>(
+                paginatedCapabilities.getTotalPages(),
+                paginatedCapabilities.getCurrentPage(),
+                paginatedCapabilities.getTotalElements(),
+                newCapabilities
+        );
+    }
+
     private Mono<Void> rollbackCapabilityCreation(Long id, Throwable ex) {
         return capabilityPersistencePort.deleteCapabilityById(id)
                 .then(Mono.error(ex));
@@ -62,5 +111,36 @@ public class CapabilityUseCase implements ICapabilityServicePort {
             return Mono.error(new BusinessException(TechnicalMessage.INVALID_REQUEST,List.of(DomainConstants.EXCEPTION_TECHNOLOGY_DUPLICATED_ID)));
         }
         return Mono.just(capability);
+    }
+
+    private Mono<PaginationAndFilter> validatePaginationAndFilter(PaginationAndFilter paginationAndFilter) {
+
+        List<String> errors = new ArrayList<>();
+
+        if (paginationAndFilter.getSize() <= DomainConstants.PAGINATION_MIN_SIZE) {
+            errors.add(DomainConstants.EXCEPTION_PAGINATION_SIZE);
+        }
+
+        if (paginationAndFilter.getPage() < DomainConstants.PAGINATION_MIN_PAGE) {
+            errors.add(DomainConstants.EXCEPTION_PAGINATION_PAGE);
+        }
+
+        Set<String> validSortDirections = Set.of(DomainConstants.SORT_BY_ASC, DomainConstants.SORT_BY_DESC);
+
+        if (!validSortDirections.contains(paginationAndFilter.getSortDirection().toUpperCase())) {
+            errors.add(DomainConstants.EXCEPTION_PAGINATION_SORT);
+        }
+
+        Set<String> validSortFields = Set.of(DomainConstants.CAPABILITY_SORT_BY_NAME, DomainConstants.CAPABILITY_SORT_BY_TECHNOLOGY_QUANTITY);
+
+        if (!validSortFields.contains(paginationAndFilter.getSortField().toLowerCase())) {
+            errors.add(DomainConstants.EXCEPTION_PAGINATION_SORT_FIELD);
+        }
+
+        if (!errors.isEmpty()) {
+            return Mono.error(new BusinessException(TechnicalMessage.ADAPTER_RESPONSE_PAGINATION_BAD_REQUEST,errors));
+        }
+
+        return Mono.just(paginationAndFilter);
     }
 }

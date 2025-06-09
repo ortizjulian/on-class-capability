@@ -9,6 +9,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CapabilityTechnologiesRequestDto {
+public class PostCapabilityTechnologiesRequestDto {
     private List<Long> technologyIds;
 }

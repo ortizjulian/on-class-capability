@@ -9,6 +9,7 @@ public class Constants {
 
     //Routes
     public static final String CAPABILITY_ROUTE = "/capability";
+    public static final String ROUTE_EMPTY = "";
 
     //Table
     public static final String CAPABILITY_TABLE_NAME = "capability";
@@ -23,5 +24,18 @@ public class Constants {
 
     //Technology WebClient
     public static final String PROPERTIES_PREFIX_TECHNOLOGY = "technology";
-    public static final String TECHNOLOGY_ROUTE = "/technology/link-capabilities/";
+    public static final String ROUTE_TECHNOLOGY = "/technology";
+    public static final String ROUTE_LINK_CAPABILITIES = "/link-capabilities/";
+    public static final String ROUTE_BY_CAPABILITIES = "/byCapabilities";
+    //Pagination
+    // Query param keys
+    public static final String QUERY_PARAM_PAGE = "page";
+    public static final String QUERY_PARAM_SIZE = "size";
+    public static final String QUERY_PARAM_SORT_DIRECTION = "sortDirection";
+    public static final String QUERY_PARAM_SORT_FIELD = "sortField";
+    // Default values
+    public static final int DEFAULT_PAGE = 0;
+    public static final int DEFAULT_SIZE = 10;
+    public static final String DEFAULT_SORT_DIRECTION = "ASC";
+    public static final String DEFAULT_SORT_FIELD = "name";
 }
