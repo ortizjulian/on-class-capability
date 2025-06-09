@@ -70,8 +70,9 @@ public class CapabilityUseCase implements ICapabilityServicePort {
 
         List<Capability> newCapabilities = paginatedCapabilities.getElements().stream()
                 .map(cap -> {
-                    List<Technology> technologies = techCapabilityMap.get(cap.getId())
-                            .getTechnologies();
+                    List<Technology> technologies = Optional.ofNullable(techCapabilityMap.get(cap.getId()))
+                            .map(Capability::getTechnologies)
+                            .orElse(Collections.emptyList());
 
                     return new Capability(
                             cap.getId(),
