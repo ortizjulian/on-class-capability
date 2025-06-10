@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -68,5 +69,11 @@ public class CapabilityAdapter implements ICapabilityPersistencePort {
     public Mono<Boolean> existAllByIds(List<Long> ids) {
         return capabilityRepository.countByIdIn(ids)
                 .map(count -> count == ids.size());
+    }
+
+    @Override
+    public Flux<Capability> findByIds(List<Long> capabilityIds) {
+        return capabilityRepository.findByIdIn(capabilityIds)
+                .map(capabilityEntityMapper::toCapability);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
+import static org.springframework.web.reactive.function.server.RouterFunctions.nest;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
@@ -16,7 +17,10 @@ public class BootcampRouter {
     @Bean
     @BootcampApiInfo
     public RouterFunction<ServerResponse> bootcampRoutes(BootcampHandler bootcampHandler) {
-        return route(POST(Constants.ROUTE_BOOTCAMP_LINK_CAPABILITIES),
-                     bootcampHandler::assignCapabilitiesToBootcamp);
+        return nest(path(Constants.BOOTCAMP_ROUTE),
+                route(POST(Constants.ROUTE_BOOTCAMP_LINK_CAPABILITIES),
+                     bootcampHandler::assignCapabilitiesToBootcamp)
+                .andRoute(POST(Constants.ROUTE_BY_IDS),
+                        bootcampHandler::getCapabilitiesByIds));
     }
 }
