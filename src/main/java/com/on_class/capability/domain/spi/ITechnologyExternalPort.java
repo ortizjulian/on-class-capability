@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface ITechnologyExternalPort {
     Mono<Void> linkTechnologiesToCapability(Long idCapability, List<Technology> technologies);
-    Flux<Capability> getTecnologiesByCapabilities(List<Long> capilityIds);
+    Flux<Capability> getTechnologiesByCapabilities(List<Long> capabilityIds);
 }

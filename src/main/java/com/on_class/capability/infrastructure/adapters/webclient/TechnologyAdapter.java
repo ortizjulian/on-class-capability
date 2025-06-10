@@ -43,10 +43,10 @@ public class TechnologyAdapter implements ITechnologyExternalPort {
     }
 
     @Override
-    public Flux<Capability> getTecnologiesByCapabilities(List<Long> capilityIds) {
+    public Flux<Capability> getTechnologiesByCapabilities(List<Long> capabilityIds) {
         return webClient.post()
                 .uri(Constants.ROUTE_TECHNOLOGY + Constants.ROUTE_BY_CAPABILITIES)
-                .bodyValue(new GetCapabilitiesTechnologiesRequestDto(capilityIds))
+                .bodyValue(new GetCapabilitiesTechnologiesRequestDto(capabilityIds))
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, response -> buildErrorResponse(response, TechnicalMessage.ADAPTER_RESPONSE_NOT_FOUND))
                 .onStatus(HttpStatusCode::is5xxServerError, response -> buildErrorResponse(response, TechnicalMessage.INTERNAL_ERROR_IN_ADAPTERS))

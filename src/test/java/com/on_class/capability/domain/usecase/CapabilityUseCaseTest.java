@@ -141,7 +141,7 @@ class CapabilityUseCaseTest {
         when(capabilityPersistencePort.getCapabilities(validPagination))
             .thenReturn(Mono.just(paginationResponse));
 
-        when(technologyExternalPort.getTecnologiesByCapabilities(List.of(1L, 2L)))
+        when(technologyExternalPort.getTechnologiesByCapabilities(List.of(1L, 2L)))
             .thenReturn(Flux.fromIterable(enrichedCapabilities));
 
         StepVerifier.create(capabilityUseCase.getPaginatedCapabilities(validPagination))
@@ -153,7 +153,7 @@ class CapabilityUseCaseTest {
             .verifyComplete();
 
         verify(capabilityPersistencePort).getCapabilities(validPagination);
-        verify(technologyExternalPort).getTecnologiesByCapabilities(List.of(1L, 2L));
+        verify(technologyExternalPort).getTechnologiesByCapabilities(List.of(1L, 2L));
     }
 
     @Test

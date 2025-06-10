@@ -48,7 +48,7 @@ public class BootcampUseCase implements IBootcampServicePort {
                                 capabilityPersistencePort.findByIds(capabilityIds)
                                         .collectList()
                                         .flatMap(capabilitiesFromDb ->
-                                        technologyExternalPort.getTecnologiesByCapabilities(capabilityIds)
+                                        technologyExternalPort.getTechnologiesByCapabilities(capabilityIds)
                                                 .collectList()
                                                 .map(capabilityWithTech ->
                                                     buildBootcampWithTechnologies(groupedFlux.key(), capabilitiesFromDb, capabilityWithTech)

@@ -59,7 +59,7 @@ public class CapabilityUseCase implements ICapabilityServicePort {
             return Mono.just(paginatedCapabilities);
         }
 
-        return technologyExternalPort.getTecnologiesByCapabilities(capabilityIds)
+        return technologyExternalPort.getTechnologiesByCapabilities(capabilityIds)
                 .collectList()
                 .map(techCapabilities -> buildNewPaginationResponse(paginatedCapabilities, techCapabilities));
     }
