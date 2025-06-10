@@ -4,10 +4,7 @@ import com.on_class.capability.domain.api.ICapabilityServicePort;
 import com.on_class.capability.domain.constants.DomainConstants;
 import com.on_class.capability.domain.enums.TechnicalMessage;
 import com.on_class.capability.domain.exceptions.BusinessException;
-import com.on_class.capability.domain.model.Capability;
-import com.on_class.capability.domain.model.PaginationAndFilter;
-import com.on_class.capability.domain.model.PaginationResponse;
-import com.on_class.capability.domain.model.Technology;
+import com.on_class.capability.domain.model.*;
 import com.on_class.capability.domain.spi.ICapabilityPersistencePort;
 import com.on_class.capability.domain.spi.ITechnologyExternalPort;
 import reactor.core.publisher.Mono;
@@ -46,7 +43,7 @@ public class CapabilityUseCase implements ICapabilityServicePort {
     }
 
     @Override
-    public Mono<PaginationResponse<Capability>> getCapabilities(PaginationAndFilter paginationAndFilter) {
+    public Mono<PaginationResponse<Capability>> getPaginatedCapabilities(PaginationAndFilter paginationAndFilter) {
         return validatePaginationAndFilter(paginationAndFilter)
                 .flatMap(validated -> capabilityPersistencePort.getCapabilities(paginationAndFilter))
                 .flatMap(this::enrichCapabilitiesWithTechnologies);

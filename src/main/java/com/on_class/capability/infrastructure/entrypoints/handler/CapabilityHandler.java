@@ -51,10 +51,10 @@ public class CapabilityHandler{
                 ));
     }
 
-    public Mono<ServerResponse> getCapabilities(ServerRequest request) {
+    public Mono<ServerResponse> getPaginatedCapabilities(ServerRequest request) {
         PaginationAndFilter paginationAndFilter = buildPaginationAndFilter(request);
 
-        return capabilityServicePort.getCapabilities(paginationAndFilter)
+        return capabilityServicePort.getPaginatedCapabilities(paginationAndFilter)
                 .flatMap(capabilities -> ServerResponse.ok().bodyValue(capabilities))
                 .doOnError(ex -> log.error(CAPABILITY_ERROR, ex))
                 .onErrorResume(BusinessException.class , ex ->  responseBuilder.buildErrorResponse(
@@ -86,5 +86,4 @@ public class CapabilityHandler{
 
         return new PaginationAndFilter(page, size, sortDirection, sortField);
     }
-
 }

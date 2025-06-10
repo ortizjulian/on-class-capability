@@ -112,10 +112,10 @@ class CapabilityUseCaseTest {
     }
 
     @Test
-    void getCapabilities_whenInvalidPaginationParameters_thenThrowsBusinessException() {
+    void getPaginatedCapabilities_whenInvalidPaginationParameters_thenThrowsBusinessException() {
         PaginationAndFilter invalidPagination = new PaginationAndFilter(-1, 0, "up", "description");
 
-        StepVerifier.create(capabilityUseCase.getCapabilities(invalidPagination))
+        StepVerifier.create(capabilityUseCase.getPaginatedCapabilities(invalidPagination))
                 .expectError(BusinessException.class)
                 .verify();
 
@@ -123,7 +123,7 @@ class CapabilityUseCaseTest {
     }
 
     @Test
-    void getCapabilities_whenValidRequest_thenSuccessWithEnrichedCapabilities() {
+    void getPaginatedCapabilities_whenValidRequest_thenSuccessWithEnrichedCapabilities() {
         PaginationAndFilter validPagination = new PaginationAndFilter(1, 10, "asc", "name");
         List<Capability> capabilities = List.of(
             new Capability(1L, "DevOps", "Description 1", List.of()),
@@ -144,7 +144,7 @@ class CapabilityUseCaseTest {
         when(technologyExternalPort.getTecnologiesByCapabilities(List.of(1L, 2L)))
             .thenReturn(Flux.fromIterable(enrichedCapabilities));
 
-        StepVerifier.create(capabilityUseCase.getCapabilities(validPagination))
+        StepVerifier.create(capabilityUseCase.getPaginatedCapabilities(validPagination))
             .expectNextMatches(response -> 
                 response.getTotalElements() == 2L &&
                 response.getElements().size() == 2 &&
@@ -157,14 +157,14 @@ class CapabilityUseCaseTest {
     }
 
     @Test
-    void getCapabilities_whenNoCapabilitiesFound_thenReturnEmptyPagination() {
+    void getPaginatedCapabilities_whenNoCapabilitiesFound_thenReturnEmptyPagination() {
         PaginationAndFilter validPagination = new PaginationAndFilter(1, 10, "asc", "name");
         PaginationResponse<Capability> emptyResponse = new PaginationResponse<>(0, 1, 0L, List.of());
 
         when(capabilityPersistencePort.getCapabilities(validPagination))
             .thenReturn(Mono.just(emptyResponse));
 
-        StepVerifier.create(capabilityUseCase.getCapabilities(validPagination))
+        StepVerifier.create(capabilityUseCase.getPaginatedCapabilities(validPagination))
             .expectNextMatches(response -> 
                 response.getTotalElements() == 0L &&
                 response.getElements().isEmpty())

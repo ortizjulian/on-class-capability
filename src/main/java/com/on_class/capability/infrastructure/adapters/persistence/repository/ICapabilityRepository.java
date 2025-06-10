@@ -14,4 +14,5 @@ public interface ICapabilityRepository extends ReactiveCrudRepository<Capability
     Mono<CapabilityEntity> findByName(String name);
     Mono<Long> countByIdIn(List<Long> ids);
     Flux<CapabilityEntity> findAllBy(Pageable pageable);
+    Flux<CapabilityEntity> findByIdIn(List<Long> ids);
 }

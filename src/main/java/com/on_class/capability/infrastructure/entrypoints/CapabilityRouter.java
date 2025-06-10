@@ -19,6 +19,6 @@ public class CapabilityRouter {
     public RouterFunction<ServerResponse> routerFunction(CapabilityHandler capabilityHandler) {
         return nest(path(Constants.CAPABILITY_ROUTE),
                 route(POST(Constants.ROUTE_EMPTY), capabilityHandler::createCapability)
-                        .andRoute(GET(Constants.ROUTE_EMPTY),capabilityHandler::getCapabilities));
+                        .andRoute(GET(Constants.ROUTE_EMPTY),capabilityHandler::getPaginatedCapabilities));
     }
 }

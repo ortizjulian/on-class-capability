@@ -36,8 +36,8 @@ public class BeanConfiguration {
     }
 
     @Bean
-    public IBootcampServicePort bootcampServicePort(){
-        return new BootcampUseCase(capabilityPersistencePort, bootcampCapabilityPersistencePort);
+    public IBootcampServicePort bootcampServicePort(ITechnologyExternalPort technologyExternalPort){
+        return new BootcampUseCase(capabilityPersistencePort, bootcampCapabilityPersistencePort, technologyExternalPort);
     }
 
     @Bean

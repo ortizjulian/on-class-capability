@@ -1,6 +1,7 @@
 package com.on_class.capability.infrastructure.utils;
 
 public class Constants {
+
     private Constants() {
         throw new UnsupportedOperationException(UTILITY_CLASS_SHOULD_NOT_BE_INSTANTIATED);
     }
@@ -10,8 +11,10 @@ public class Constants {
     //Routes
     public static final String CAPABILITY_ROUTE = "/capability";
     public static final String BOOTCAMP_ID_PATH_VARIABLE = "bootcampId";
-    public static final String ROUTE_BOOTCAMP_LINK_CAPABILITIES = "/bootcamps/{" + BOOTCAMP_ID_PATH_VARIABLE + "}" + "/capabilities";
+    public static final String BOOTCAMP_ROUTE = "/bootcamps";
+    public static final String ROUTE_BOOTCAMP_LINK_CAPABILITIES = "/{" + BOOTCAMP_ID_PATH_VARIABLE + "}" + "/capabilities";
     public static final String ROUTE_EMPTY = "";
+    public static final String ROUTE_BY_IDS = "/byIds";
 
     //Table
     public static final String CAPABILITY_TABLE_NAME = "capability";
